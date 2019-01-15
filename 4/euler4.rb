@@ -1,4 +1,4 @@
-class Fixnum
+class Integer
   def palindrome?
     to_s == to_s.reverse
   end

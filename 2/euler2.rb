@@ -1,7 +1,5 @@
 fibonacci = [1, 1]
-while fibonacci.last < 4E6
-  fibonacci << fibonacci[-1] + fibonacci[-2]
-end
+fibonacci << fibonacci[-1] + fibonacci[-2] while fibonacci.last < 4E6
 
 answer = fibonacci.select(&:even?).reduce(:+)
 
