@@ -15,7 +15,7 @@ def triangle_number_of_divisors(index)
   number_of_divisors(index) * number_of_divisors((index + 1) / 2)
 end
 
-answer = (1..Float::INFINITY).each do |i|
+answer = 1.step do |i|
   number_of_divisors = triangle_number_of_divisors(i)
   break triangle_number(i) if number_of_divisors > 500
 end
