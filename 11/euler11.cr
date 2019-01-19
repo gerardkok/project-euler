@@ -19,7 +19,7 @@ GRID = [
   [4, 42, 16, 73, 38, 25, 39, 11, 24, 94, 72, 18, 8, 46, 29, 32, 40, 62, 76, 36],
   [20, 69, 36, 41, 72, 30, 23, 88, 34, 62, 99, 69, 82, 67, 59, 85, 74, 4, 36, 16],
   [20, 73, 35, 29, 78, 31, 90, 1, 74, 31, 49, 71, 48, 86, 81, 16, 23, 57, 5, 54],
-  [1, 70, 54, 71, 83, 51, 54, 69, 16, 92, 33, 48, 61, 43, 52, 1, 89, 19, 67, 48]
+  [1, 70, 54, 71, 83, 51, 54, 69, 16, 92, 33, 48, 61, 43, 52, 1, 89, 19, 67, 48],
 ]
 
 quadruplets = SIZE.times.each_with_object([] of Array(Int32)) do |r, memo|
@@ -27,7 +27,7 @@ quadruplets = SIZE.times.each_with_object([] of Array(Int32)) do |r, memo|
     memo << [GRID[r][c - 3], GRID[r][c - 2], GRID[r][c - 1], GRID[r][c]] if c > 2
     memo << [GRID[r - 3][c], GRID[r - 2][c], GRID[r - 1][c], GRID[r][c]] if r > 2
     memo << [GRID[r - 3][c - 3], GRID[r - 2][c - 2], GRID[r - 1][c - 1], GRID[r][c]] if r > 2 && c > 2
-    memo << [GRID[r - 3][c + 3], GRID[r - 2][c + 2], GRID[r - 1][c + 1], GRID[r][c]] if r > 2 && c < 17
+    memo << [GRID[r - 3][c + 3], GRID[r - 2][c + 2], GRID[r - 1][c + 1], GRID[r][c]] if r > 2 && c < SIZE - 3
   end
 end
 
