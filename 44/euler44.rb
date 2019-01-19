@@ -1,7 +1,6 @@
 class Integer
   def pentagonal?
-    i = Math.sqrt(24 * self + 1)
-    (i % 1).zero? && (i % 6 == 5)
+    (((Math.sqrt(24 * self + 1) + 1) / 6) % 1).zero?
   end
 end
 
