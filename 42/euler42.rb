@@ -18,6 +18,6 @@ class String
   end
 end
 
-answer = CSV.read('input42.txt').first.select(&:triangular?).length
+answer = CSV.read('input42.txt').first.count(&:triangular?)
 
 puts answer
