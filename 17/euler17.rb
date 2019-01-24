@@ -29,7 +29,7 @@ class Integer
     90 => 'ninety'.length
   }.freeze
   HUNDRED = 'hundred'.length
-  THOUSAND = IRREGULAR[1] + 'thousand'.length
+  ONE_THOUSAND = IRREGULAR[1] + 'thousand'.length
   AND = 'and'.length
 
   def lettercount
@@ -42,7 +42,7 @@ class Integer
       hundreds, tens = divmod(100)
       hundreds.lettercount + HUNDRED + (tens.zero? ? 0 : tens.lettercount + AND)
     else # don't account for > 1_000
-      THOUSAND
+      ONE_THOUSAND
     end
   end
 end
