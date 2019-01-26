@@ -5,7 +5,7 @@ def to_number(digits) : Int64
 end
 
 def substring_div?(digits)
-  digits[1..-1].each_cons(3).with_index.all? do |substring, i|
+  digits.skip(1).each_cons(3).with_index.all? do |substring, i|
     (to_number(substring) % DIVISORS[i]).zero?
   end
 end
