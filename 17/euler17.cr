@@ -37,7 +37,7 @@ struct Int
       IRREGULAR[self]
     elsif self < 100
       tens, units = divmod(10)
-      (tens * 10).lettercount + (units.zero? ? 0 : units.lettercount)
+      (tens * 10).lettercount + units.lettercount # self is not irregular, so units cannot be zero
     elsif self < 1_000
       hundreds, tens = divmod(100)
       hundreds.lettercount + HUNDRED + (tens.zero? ? 0 : tens.lettercount + AND)
