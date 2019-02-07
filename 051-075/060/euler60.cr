@@ -39,14 +39,11 @@ def concatable_primes?(prime1, prime2)
   concat(prime1, prime2).prime? && concat(prime2, prime1).prime?
 end
 
-def neighbours(prime, vertices)
-  vertices.select { |p| (p == 3) || (p % 3 == prime % 3) }.select { |p| concatable_primes?(prime, p) }
-end
-
 neighbour_cliques = Hash(Int32, Array(Set(Int32))).new do |h, prime|
+  neighbours = h.keys.select { |p| (p == 3) || (p % 3 == prime % 3) }.select { |p| concatable_primes?(prime, p) }
   n = Set(Int32).new
-  h[prime] = neighbours(prime, h.keys).reduce([Set(Int32).new]) do |result, p|
-    neighbour_cliques_via_p = h[p].select { |clique| clique.subset?(n) }.map { |clique| clique | [p].to_set }
+  h[prime] = neighbours.reduce([Set(Int32).new]) do |result, p|
+    neighbour_cliques_via_p = n.empty? ? [[p].to_set] : h[p].select { |clique| clique.subset?(n) }.map { |clique| clique | [p].to_set }
     n |= [p].to_set
     result.concat(neighbour_cliques_via_p)
   end
