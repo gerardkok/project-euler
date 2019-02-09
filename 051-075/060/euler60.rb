@@ -12,11 +12,9 @@ def concatable_primes?(prime1, prime2)
 end
 
 neighbour_cliques = Hash.new do |h, prime|
-  neighbours = h.keys.select { |p| (p == 3) || (p % 3 == prime % 3) }.select { |p| concatable_primes?(prime, p) }
-  n = Set.new
+  neighbours = h.keys.select { |p| (p == 3) || (p % 3 == prime % 3) }.select { |p| concatable_primes?(prime, p) }.to_set
   h[prime] = neighbours.reduce([Set.new]) do |result, p|
-    neighbour_cliques_via_p = n.empty? ? [[p].to_set] : h[p].select { |clique| clique.subset?(n) }.map { |clique| clique | [p] }
-    n |= [p]
+    neighbour_cliques_via_p = h[p].select { |clique| clique.subset?(neighbours) }.map { |clique| clique | [p] }
     result.concat(neighbour_cliques_via_p)
   end
 end
