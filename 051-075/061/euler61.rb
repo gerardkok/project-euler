@@ -49,6 +49,6 @@ cycle = figurates.keys.each do |k|
   break c if c
 end
 
-answer = cycle.map(&:first).map(&:to_i).reduce(0) { |sum, n| sum + n * 100 + n }
+answer = cycle.map(&:first).map(&:to_i).map { |n| n * 101 }.reduce(:+)
 
 puts answer
