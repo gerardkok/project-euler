@@ -1,15 +1,15 @@
-def recurring_cycle_length(number, m = 0, d = 1, continued_fraction = [])
+def recurring_cycle_length(number, m = 0, d = 1, a = nil)
   # see https://en.wikipedia.org/wiki/Methods_of_computing_square_roots#Algorithm
-  a0 = Math.sqrt(number).to_i
-  return 0 if a0**2 == number
+  s = Math.sqrt(number).to_i
+  return 0 if s**2 == number # number is perfect square
 
-  a = continued_fraction.empty? ? a0 : continued_fraction.last
-  return continued_fraction.length if a == 2 * a0
+  a ||= s
+  return 0 if a == 2 * s
 
   m = d * a - m
   d = (number - m**2) / d
-  a = ((a0 + m) / d).to_i
-  recurring_cycle_length(number, m, d, continued_fraction << a)
+  a = ((s + m) / d).to_i
+  recurring_cycle_length(number, m, d, a) + 1
 end
 
 answer = (1..10_000).map { |n| recurring_cycle_length(n) }.count(&:odd?)
