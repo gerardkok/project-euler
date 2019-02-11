@@ -1,10 +1,7 @@
 def recurring_cycle_length(number, m = 0, d = 1, a = nil)
   # see https://en.wikipedia.org/wiki/Methods_of_computing_square_roots#Algorithm
   s = Math.sqrt(number).to_i
-  return 0 if s**2 == number # number is perfect square
-
-  a ||= s
-  return 0 if a == 2 * s
+  return 0 if s**2 == number || (a ||= s) == 2 * s # number is perfect square or algorithm terminates
 
   m = d * a - m
   d = (number - m**2) / d
