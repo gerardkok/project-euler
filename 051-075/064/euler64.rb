@@ -1,11 +1,10 @@
-def recurring_cycle_length(number, m = 0, d = 1, continued_fraction = nil)
+def recurring_cycle_length(number, m = 0, d = 1, continued_fraction = [])
   # see https://en.wikipedia.org/wiki/Methods_of_computing_square_roots#Algorithm
   a0 = Math.sqrt(number).to_i
   return 0 if a0**2 == number
 
-  continued_fraction ||= [a0]
-  a = continued_fraction.last
-  return continued_fraction.length - 1 if a == 2 * a0
+  a = continued_fraction.empty? ? a0 : continued_fraction.last
+  return continued_fraction.length if a == 2 * a0
 
   m = d * a - m
   d = (number - m**2) / d
