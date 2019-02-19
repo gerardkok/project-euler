@@ -1,16 +1,14 @@
 N = 1_000_000
 
-sieve = (0..N).to_a
-
-(2..N).each do |n|
-  if sieve[n] == n
-    sieve[n] -= 1
+sieve = (2..N).each_with_object((0..N).to_a) do |n, result|
+  if result[n] == n
+    result[n] -= 1
     (2 * n..N).step(n).each do |p|
-      sieve[p] = (sieve[p] * (n - 1)) / n
+      result[p] = (result[p] * (n - 1)) / n
     end
   end
 end
 
-#puts sieve.to_s
+answer = sieve[2..N].reduce(:+)
 
-puts sieve[2..N].reduce(:+)
+puts answer
