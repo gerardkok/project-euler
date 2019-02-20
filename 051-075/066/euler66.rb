@@ -4,9 +4,9 @@ class Integer
   end
 end
 
-def continued_fraction_period(number, s, m = 0, d = 1, a = nil)
+def continued_fraction_period(number, s, m = 0, d = 1, a = s)
   # see https://en.wikipedia.org/wiki/Methods_of_computing_square_roots#Algorithm
-  return [] if (a ||= s) == 2 * s
+  return [] if a == 2 * s
 
   m = d * a - m
   d = (number - m**2) / d
