@@ -1,13 +1,12 @@
 require 'prime'
 
 def combine(upto, primes = Prime.each(upto).to_a)
-  return 0 if primes.empty?
+  return 1 if upto.zero?
+  return 0 if upto.negative?
 
-  prime = primes.first
-  return 1 if upto == prime
-  return 0 if upto < prime
-
-  combine(upto - prime, primes) + combine(upto, primes[1..-1])
+  primes.each_with_index.reduce(0) do |sum, (p, i)|
+    sum + combine(upto - p, primes[i..-1])
+  end
 end
 
 answer = 2.step.find { |n| combine(n) > 5_000 }
