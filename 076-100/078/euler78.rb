@@ -13,6 +13,6 @@ p = Hash.new do |h, n|
   end
 end.update(0 => 1)
 
-answer = 1.step.find { |n| p[n].zero? }
+answer = 0.step.find { |n| p[n].zero? }
 
 puts answer
