@@ -5,7 +5,7 @@ def count_prime_summations(upto, primes = Prime.each(upto).to_a)
   return 0 if upto.negative?
 
   primes.each_with_index.reduce(0) do |sum, (p, i)|
-    sum + count_prime_summations(upto - p, primes[0..i])
+    sum + count_prime_summations(upto - p, primes.first(i + 1))
   end
 end
 
