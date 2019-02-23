@@ -1,17 +1,15 @@
 COINS = [1, 2, 5, 10, 20, 50, 100, 200].freeze
 
-class Combinations
-  def self.combine(amount)
-    @ways = [1]
-    COINS.each do |coin|
-      (coin..amount).each do |a|
-        @ways[a] = (@ways[a] ||= 0) + @ways[a - coin]
-      end
+def combine(amount)
+  initial = Array.new(amount + 1) { |i| i.zero? ? 1 : 0 }
+  ways = COINS.each_with_object(initial) do |coin, result|
+    (coin..amount).each do |a|
+      result[a] += result[a - coin]
     end
-    @ways[amount]
   end
+  ways[amount]
 end
 
-answer = Combinations.combine(200)
+answer = combine(200)
 
 puts answer
