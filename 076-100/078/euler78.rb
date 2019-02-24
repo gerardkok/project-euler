@@ -3,16 +3,18 @@ def pentagonal(k)
 end
 
 # https://en.wikipedia.org/wiki/Pentagonal_number_theorem
-p = Hash.new do |h, n|
-  h[n] = 1.step.lazy.flat_map { |k| [k, -k] }.reduce(0) do |result, k|
+def partition_number(n, partition_numbers_so_far)
+  1.step.lazy.flat_map { |k| [k, -k] }.reduce(0) do |result, k|
     pentagonal_number = pentagonal(k)
     break result if n < pentagonal_number
 
     sign = k.odd? ? 1 : -1
-    (result + sign * h[n - pentagonal_number]) % 1_000_000 # avoid big numbers by using mod here
+    (result + sign * partition_numbers_so_far[n - pentagonal_number]) % 1_000_000 # avoid big numbers by using mod here
   end
-end.update(0 => 1)
+end
 
-answer = 0.step.find { |n| p[n].zero? }
+partition_numbers = Hash.new { |h, n| h[n] = partition_number(n, h) }.update(0 => 1)
+
+answer = 0.step.find { |n| partition_numbers[n].zero? }
 
 puts answer
