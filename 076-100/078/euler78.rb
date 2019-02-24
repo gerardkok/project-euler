@@ -9,7 +9,8 @@ def partition_number(n, partition_numbers_so_far)
     break result if n < pentagonal_number
 
     sign = k.odd? ? 1 : -1
-    (result + sign * partition_numbers_so_far[n - pentagonal_number]) % 1_000_000 # avoid big numbers by using mod here
+    # avoid big integers by using mod here instead of during the find
+    (result + sign * partition_numbers_so_far[n - pentagonal_number]) % 1_000_000
   end
 end
 
