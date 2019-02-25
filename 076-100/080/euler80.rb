@@ -1,14 +1,12 @@
-require 'bigdecimal/math'
+require 'bigdecimal'
 
 class Integer
-  include BigMath
-
   def square?
     (Math.sqrt(self) % 1).zero?
   end
 
   def sqrt_digit_sum(precision = 100)
-    BigMath.sqrt(BigDecimal(self), precision).to_s('F').sub('.', '')[0...precision].chars.map(&:to_i).reduce(:+)
+    BigDecimal(self).sqrt(precision).to_s[2..precision + 1].chars.map(&:to_i).reduce(:+)
   end
 end
 
