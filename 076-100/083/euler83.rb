@@ -19,7 +19,7 @@ def min_path_length(matrix)
     end
     unvisited.sort_by! { |x, y| distances[x][y] }
   end
-  distances[r][c]
+  distances[size - 1][size - 1]
 end
 
 matrix = CSV.read('input83.txt').map { |line| line.map(&:to_i) }
