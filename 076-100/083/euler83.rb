@@ -15,9 +15,8 @@ def min_path_length(matrix)
       next unless distances[rn][cn] > d
 
       distances[rn][cn] = d
-      unvisited << [rn, cn]
+      unvisited.push([rn, cn]).sort_by! { |x, y| distances[x][y] }
     end
-    unvisited.sort_by! { |x, y| distances[x][y] }
   end
   distances[size - 1][size - 1]
 end
