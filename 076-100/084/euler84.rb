@@ -1,28 +1,18 @@
 class Dice
-  SIZE = 6
+  attr_reader :sum, :double
+  alias double? double
 
-  # def initialize
-  #   @one = 0
-  #   @other = 0
-  # end
+  SIZE = 4
 
-  def roll
-    @one = rand(SIZE).next
-    @other = rand(SIZE).next
-  end
-
-  def double?
-    @one == @other
-  end
-
-  def sum
-    @one + @other
+  def initialize
+    one = rand(SIZE).next
+    other = rand(SIZE).next
+    @sum = one + other
+    @double = (one == other)
   end
 end
 
 class Board
-  attr_accessor :position
-
   SQUARES = [:GO, :A1, :CC1, :A2, :T1, :R1, :B1, :CH1, :B2, :B3,
              :JAIL, :C1, :U1, :C2, :C3, :R2, :D1, :CC2, :D2, :D3,
              :FP, :E1, :CH2, :E2, :E3, :R3, :F1, :F2, :U2, :F3,
@@ -34,21 +24,33 @@ class Board
     @position = :GO
     @cc_deck = CC.shuffle
     @ch_deck = CH.shuffle
-    @dice = Dice.new
     @consecutive_doubles = 0
   end
 
-  def roll
-    @dice.roll
-    if @dice.double?
-      @consecutive_doubles += 1
-    else
-      @consecutive_doubles = 0
-    end
+  def index
+    SQUARES.index(@position)
   end
 
-  def three_consecutive_doubles?
-    @consecutive_doubles == 3
+  def advance(steps)
+    SQUARES[(index + steps) % SQUARES.length]
+  end
+
+  def retreat(steps)
+    SQUARES[(index + SQUARES.length - steps) % SQUARES.length]
+  end
+
+  def roll
+    dice = Dice.new
+    @consecutive_doubles = dice.double? ? @consecutive_doubles + 1 : 0
+    if @consecutive_doubles == 3
+      @consecutive_doubles = 0
+      @position = :JAIL
+    else
+      @position = advance(dice.sum)
+      chance_card if chance?
+      community_chest_card if community_chest?
+      @position = :JAIL if @position == :G2J
+    end
   end
 
   def chance?
@@ -56,57 +58,41 @@ class Board
   end
 
   def community_chest?
-    [:CC1, :CC2].include?(@position)
+    [:CC1, :CC2, :CC3].include?(@position)
   end
 
-  def advance
-    if three_consecutive_doubles?
-      @consecutive_doubles = 0
-      @position = :JAIL
-    else
-      @position = SQUARES[(SQUARES.index(@position) + @dice.sum) % SQUARES.length]
-      advance_ch if chance?
-      advance_cc if community_chest?
-      @position = :JAIL if @position == :G2J
-    end
-  end
-
-  def advance_ch
+  def chance_card
     card = @ch_deck.first
     @ch_deck.rotate!
     if [:GO, :JAIL, :C1, :E3, :H2, :R1].include?(card)
       @position = card
     elsif card == :next_R
       @position = case @position
-                  when :CH1
-                    :R2
-                  when :CH2
-                    :R3
-                  else
-                    :R1
+                  when :CH1 then :R2
+                  when :CH2 then :R3
+                  else :R1
                   end
     elsif card == :next_U
       @position = (@position == :CH2) ? :U2 : :U1
     elsif card == :back_3
-      @position = SQUARES[(SQUARES.index(@position) + SQUARES.length - 3) % SQUARES.length]
+      @position = retreat(3)
     end
   end
 
-  def advance_cc
+  def community_chest_card
     card = @cc_deck.first
     @cc_deck.rotate!
     @position = card unless card == :ignore
-  end
-
-  def turn
-    roll
-    advance
   end
 end
 
 board = Board.new
 
-100.times do
-  board.turn
-  puts board.position.to_s
+freqs = 1_000_000.times.each_with_object({}) do |_, result|
+  board.roll
+  result[board.index] = (result[board.index] ||= 0) + 1
 end
+
+answer = freqs.max_by(3) { |_, v| v }.map(&:first).map { |n| '%02d' % n }.join
+
+puts answer
