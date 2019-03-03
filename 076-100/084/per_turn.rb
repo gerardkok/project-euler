@@ -1,17 +1,17 @@
-FACES = 4
+FACES = 6
 
-def roll_probabilities(doubles_so_far = 0)
+def roll_probabilities(doubles = 1)
   (1..FACES).each_with_object(Hash.new(0)) do |i, acc|
     (1..FACES).each do |j|
       if i == j
-        next if doubles_so_far >= 2
+        next if doubles >= 3
 
-        extra_roll = roll_probabilities(doubles_so_far + 1)
+        extra_roll = roll_probabilities(doubles + 1)
         extra_roll.each do |c, p|
           acc[i + j + c] += p
         end
       else
-        acc[i + j] += (1.0 / FACES)**((doubles_so_far + 1) * 2)
+        acc[i + j] += (1.0 / FACES)**(doubles * 2)
       end
     end
   end
