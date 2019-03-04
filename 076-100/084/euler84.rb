@@ -36,7 +36,7 @@ class Board
   end
 
   def retreat(steps)
-    SQUARES[(index + SQUARES.length - steps) % SQUARES.length]
+    SQUARES[(index - steps) % SQUARES.length]
   end
 
   def roll
