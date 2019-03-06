@@ -1,16 +1,23 @@
-MAX_M = Math.sqrt(1_000 / 2).ceil
+MAX_SUM = 1_000
 
-freqs = (1..MAX_M).each_with_object({}) do |m, memo|
-  (1..m).each do |n|
-    next unless (m + n).odd? && m.gcd(n) == 1 # only consider primitive Pythagorean triples
+def triplet_sum(m, n)
+  2 * m * (m + n)
+end
 
-    triplet_sum = 2 * m * (m + n)
-    (triplet_sum..1_000).step(triplet_sum).each do |i|
-      memo[i] = (memo[i] ||= 0) + 1
+triplet_sum_freqs = begin
+  m_n = [[2, 1]]
+  triplet_sum_freqs = Hash.new(0)
+  loop do
+    m_n.map { |m, n| triplet_sum(m, n) }.each do |triplet_sum|
+      (triplet_sum..MAX_SUM).step(triplet_sum) do |i|
+        triplet_sum_freqs[i] += 1
+      end
     end
+    m_n = m_n.flat_map { |m, n| [[2 * m - n, m], [2 * m + n, m], [m + 2 * n, n]] }.select { |m, n| triplet_sum(m, n) <= MAX_SUM }
+    break triplet_sum_freqs if m_n.empty?
   end
 end
 
-answer = freqs.max_by(&:last).first
+answer = triplet_sum_freqs.max_by(&:last).first
 
 puts answer
