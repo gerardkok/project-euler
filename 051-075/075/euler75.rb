@@ -6,7 +6,7 @@ end
 
 triplet_sum_freqs = begin
   m_n = [[2, 1]]
-  triplet_sum_freqs = Hash.new(0)
+  triplet_sum_freqs = Array.new(MAX_SUM + 1, 0)
   loop do
     m_n.map { |m, n| triplet_sum(m, n) }.each do |triplet_sum|
       (triplet_sum..MAX_SUM).step(triplet_sum) do |i|
@@ -18,6 +18,6 @@ triplet_sum_freqs = begin
   end
 end
 
-answer = triplet_sum_freqs.values.count { |l| l == 1 }
+answer = triplet_sum_freqs.count { |l| l == 1 }
 
 puts answer
