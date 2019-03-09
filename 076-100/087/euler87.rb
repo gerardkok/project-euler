@@ -11,4 +11,6 @@ combinations = Prime.take_while { |p| p**4 < MAX }.map { |p| p**4 }.each_with_ob
   end
 end
 
-puts combinations.length
+answer = combinations.length
+
+puts answer
