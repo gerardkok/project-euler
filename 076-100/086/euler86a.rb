@@ -3,14 +3,9 @@ MAX_C = (Math.sqrt(5) * MAX_M).to_i
 
 def number_of_paths(l, bh, cuboid_shortest_paths)
   max_l = MAX_M / l
-  if bh <= l
-    (1..max_l).each do |i|
-      cuboid_shortest_paths[i * l] += i * bh / 2
-    end
-  else
-    (1..max_l).each do |i|
-      cuboid_shortest_paths[i * l] += 1 + (i * l - (i * bh + 1) / 2)
-    end
+  (1..max_l).each do |i|
+    number_of_paths = (bh <= l) ? i * bh / 2 : 1 + (i * l - (i * bh + 1) / 2)
+    cuboid_shortest_paths[i * l] += number_of_paths
   end
 end
 
