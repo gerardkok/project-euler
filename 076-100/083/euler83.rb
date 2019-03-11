@@ -35,9 +35,9 @@ class PriorityQueue
 
   def float
     k = length
-    while (j = k) > 1 && heavier?(k >> 1, j)
-      k >>= 1
+    while (j = k >> 1).positive? && heavier?(j, k)
       swap(j, k)
+      k = j
     end
   end
 
