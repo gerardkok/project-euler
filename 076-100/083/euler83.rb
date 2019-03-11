@@ -65,22 +65,22 @@ class PriorityQueue
   end
 end
 
-def left_neighbour(r, c, unvisited, matrix)
+def upper_neighbour(r, c, unvisited, matrix)
   d = unvisited[r, c] + matrix[r - 1][c]
   unvisited.push(r - 1, c, d) if unvisited[r - 1, c] > d
 end
 
-def right_neighbour(r, c, unvisited, matrix)
+def lower_neighbour(r, c, unvisited, matrix)
   d = unvisited[r, c] + matrix[r + 1][c]
   unvisited.push(r + 1, c, d) if unvisited[r + 1, c] > d
 end
 
-def upper_neighbour(r, c, unvisited, matrix)
+def left_neighbour(r, c, unvisited, matrix)
   d = unvisited[r, c] + matrix[r][c - 1]
   unvisited.push(r, c - 1, d) if unvisited[r, c - 1] > d
 end
 
-def lower_neighbour(r, c, unvisited, matrix)
+def right_neighbour(r, c, unvisited, matrix)
   d = unvisited[r, c] + matrix[r][c + 1]
   unvisited.push(r, c + 1, d) if unvisited[r, c + 1] > d
 end
@@ -91,10 +91,10 @@ def min_path_length(matrix, size = matrix.length)
   max = size - 1
 
   until (r, c = unvisited.pop) == [max, max]
-    left_neighbour(r, c, unvisited, matrix) unless r.zero?
-    right_neighbour(r, c, unvisited, matrix) unless r == max
-    upper_neighbour(r, c, unvisited, matrix) unless c.zero?
-    lower_neighbour(r, c, unvisited, matrix) unless c == max
+    upper_neighbour(r, c, unvisited, matrix) unless r.zero?
+    lower_neighbour(r, c, unvisited, matrix) unless r == max
+    left_neighbour(r, c, unvisited, matrix) unless c.zero?
+    right_neighbour(r, c, unvisited, matrix) unless c == max
   end
   unvisited[max, max]
 end
