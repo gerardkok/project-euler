@@ -1,5 +1,3 @@
-require 'prime'
-
 MAX_K = 12_000
 MAX_N = 2 * MAX_K
 
