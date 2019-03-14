@@ -8,7 +8,6 @@ class Hash
   end
 end
 
-
 dependencies = File.readlines('input79.txt').map(&:chomp).each_with_object({}) do |line, result|
   line.chars.each_cons(2) do |from, to|
     result[from] ||= []
