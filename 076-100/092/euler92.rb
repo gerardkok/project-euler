@@ -1,39 +1,35 @@
+SQUARES = (0..9).map { |n| n * n }.freeze
+NUMBER_OF_DIGITS = 7
+MAX_SQUARED_DIGIT_SUMS = NUMBER_OF_DIGITS * 9**2 + 1
+
 def next_squared_digit_number(number)
   result = 0
   while number.positive?
-    result += (number % 10) * (number % 10)
-    number /= 10
+    number, modulo = number.divmod(10)
+    result += SQUARES[modulo]
   end
   result
 end
 
+initial = Array.new(MAX_SQUARED_DIGIT_SUMS) { |i| i.zero? ? 1 : 0 }
+numbers_ending_on = (1..NUMBER_OF_DIGITS).reduce(initial) do |acc, k|
+  Array.new(MAX_SQUARED_DIGIT_SUMS) do |n|
+    SQUARES.reduce(0) do |sum, square|
+      add = (n >= square) ? acc[n - square] : 0
+      sum + add
+    end
+  end
+end
+
 def square_digit_chain_to_89?(number)
-  return number == 89 if [0, 1, 89].include?(number)
+  return number == 89 if [1, 89].include?(number)
 
   square_digit_chain_to_89?(next_squared_digit_number(number))
 end
 
-def ascending_combinations(digits = [])
-  return [[]] if digits.empty?
-
-  head, *tail = digits
-  higher_combinations = (head < 9) ? ascending_combinations([head + 1] * digits.length) : []
-  ascending_combinations(tail).map { |a| [head] + a } + higher_combinations
+answer = (1...MAX_SQUARED_DIGIT_SUMS).reduce(0) do |acc, n|
+  add = square_digit_chain_to_89?(n) ? numbers_ending_on[n] : 0
+  acc + add
 end
-
-def to_number(digits)
-  digits.reduce { |number, digit| number * 10 + digit }
-end
-
-def factorial(n)
-  (1..n).reduce(:*) || 1
-end
-
-def multinomial_coefficient(digits)
-  digit_frequencies = digits.each_with_object(Array.new(10, 0)) { |d, acc| acc[d] += 1 }
-  digit_frequencies.reduce(factorial(digits.length)) { |acc, d| acc / factorial(d) }
-end
-
-answer = ascending_combinations([0] * 7).select { |c| square_digit_chain_to_89?(to_number(c)) }.map { |c| multinomial_coefficient(c) }.reduce(:+)
 
 puts answer
