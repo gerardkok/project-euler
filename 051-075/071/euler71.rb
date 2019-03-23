@@ -7,12 +7,10 @@ def modinv(a, m)
   inv = 1
   x0 = 0
   while a > 1
-    quotient, remainder = a.divmod(m)
-    a = m
-    m = remainder
+    quotient, m, a = *a.divmod(m), m
     inv, x0 = x0, inv - quotient * x0
   end
-  (inv + m0) % m0 # handle negative inv
+  inv % m0 # handle negative inv
 end
 
 def previous_farey_fraction(n, fraction)
