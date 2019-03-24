@@ -4,22 +4,22 @@ OPERATORS = [:+, :-, :*, :/].freeze
 NUMBER_OF_OPERATORS = NUMBER_OF_OPERANDS - 1
 OPERATOR_PERMS = OPERATORS.repeated_permutation(NUMBER_OF_OPERATORS).to_a.freeze
 
-def perform(operand1, operator, operand2)
+def perform(left_operand, operator, right_operand)
   case operator
-  when :+ then operand1 + operand2
-  when :- then operand1 - operand2
-  when :* then operand1 * operand2
+  when :+ then left_operand + right_operand
+  when :- then left_operand - right_operand
+  when :* then left_operand * right_operand
   when :/
-    return nil if operand2.zero? # don't allow division by zero
+    return nil if right_operand.zero? # don't allow division by zero
 
-    Rational(operand1, operand2)
+    Rational(left_operand, right_operand)
   end
 end
 
 def templates(number_of_operators = 0)
   return [[:operand]] if number_of_operators.zero?
 
-  (0..(number_of_operators - 1) / 2).each_with_object([]) do |l, acc|
+  (0...number_of_operators).each_with_object([]) do |l, acc|
     left_trees = templates(l)
     right_trees = templates(number_of_operators - l - 1)
     left_trees.each do |left|
