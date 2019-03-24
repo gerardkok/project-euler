@@ -52,7 +52,7 @@ def evaluate(template, operands, operators)
 end
 
 def sequence_max(operands)
-  max = OPERANDS.last(NUMBER_OF_OPERANDS).reduce { |acc, i| i * acc } + 1
+  max = OPERANDS.last(NUMBER_OF_OPERANDS).reduce(:*) + 1
   constructables = Array.new(max, false)
   operands.permutation.each do |perm|
     OPERATOR_PERMS.each do |operators|
