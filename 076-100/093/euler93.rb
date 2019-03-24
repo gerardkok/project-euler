@@ -1,6 +1,7 @@
 OPERANDS = (1..9).to_a.freeze
 OPERATORS = [:+, :-, :*, :/].freeze
-OPERATOR_PERMS = OPERATORS.repeated_permutation(3).to_a.freeze
+NUMBER_OF_DIGITS = 4
+OPERATOR_PERMS = OPERATORS.repeated_permutation(NUMBER_OF_DIGITS - 1).to_a.freeze
 
 def perform(operand1, operator, operand2)
   case operator
@@ -14,38 +15,54 @@ def perform(operand1, operator, operand2)
   end
 end
 
-def evaluate(expression)
-  stack = []
-  expression.each do |element|
-    if OPERATORS.include?(element)
-      operand1 = stack.pop
-      operand2 = stack.pop
-      element = perform(operand2, element, operand1)
-      return 0 unless element
+def templates(number_of_operators = 0)
+  return [[:operand]] if number_of_operators.zero?
+
+  (0..(number_of_operators - 1) / 2).each_with_object([]) do |l, acc|
+    left_trees = templates(l)
+    right_trees = templates(number_of_operators - l - 1)
+    left_trees.each do |left|
+      right_trees.each do |right|
+        acc << left + right + [:operator]
+      end
     end
-    stack.push(element)
+  end
+end
+
+TEMPLATES = templates(NUMBER_OF_DIGITS - 1).freeze
+
+def evaluate(template, operands, operators)
+  stack = []
+  current_operand = current_operator = 0
+  template.each do |element|
+    if element == :operator
+      outcome = perform(stack.pop, operators[current_operator], stack.pop)
+      return 0 unless outcome
+
+      stack.push(outcome)
+      current_operator += 1
+    else
+      stack.push(operands[current_operand])
+      current_operand += 1
+    end
   end
   result = stack.pop.to_r
   (result.denominator == 1 && result.positive?) ? result.numerator : 0
 end
 
-def generate_expressions(operands, operators)
-  [[operands[0], operands[1], operators[0], operands[2], operands[3], operators[1], operators[2]],
-   [operands[0], operands[1], operators[0], operands[2], operators[1], operands[3], operators[2]]]
-end
-
 def sequence_max(operands)
-  constructables = Array.new(1 + 9 * 8 * 7 * 6, false)
+  max = OPERANDS.last(NUMBER_OF_DIGITS).reduce { |acc, i| i * acc } + 1
+  constructables = Array.new(max, false)
   operands.permutation.each do |perm|
     OPERATOR_PERMS.each do |operators|
-      generate_expressions(perm, operators).each do |expr|
-        constructables[evaluate(expr)] = true
+      TEMPLATES.each do |template|
+        constructables[evaluate(template, perm, operators)] = true
       end
     end
   end
   constructables.drop(1).find_index(false)
 end
 
-answer = OPERANDS.combination(4).max_by { |combination| sequence_max(combination) }.join.to_s
+answer = OPERANDS.combination(NUMBER_OF_DIGITS).max_by { |combination| sequence_max(combination) }.join.to_s
 
 puts answer
