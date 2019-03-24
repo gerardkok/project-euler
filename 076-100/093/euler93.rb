@@ -1,7 +1,8 @@
 OPERANDS = (1..9).to_a.freeze
+NUMBER_OF_OPERANDS = 4
 OPERATORS = [:+, :-, :*, :/].freeze
-NUMBER_OF_DIGITS = 4
-OPERATOR_PERMS = OPERATORS.repeated_permutation(NUMBER_OF_DIGITS - 1).to_a.freeze
+NUMBER_OF_OPERATORS = NUMBER_OF_OPERANDS - 1
+OPERATOR_PERMS = OPERATORS.repeated_permutation(NUMBER_OF_OPERATORS).to_a.freeze
 
 def perform(operand1, operator, operand2)
   case operator
@@ -9,7 +10,7 @@ def perform(operand1, operator, operand2)
   when :- then operand1 - operand2
   when :* then operand1 * operand2
   when :/
-    return nil if operand2.zero?
+    return nil if operand2.zero? # don't allow division by zero
 
     Rational(operand1, operand2)
   end
@@ -29,7 +30,7 @@ def templates(number_of_operators = 0)
   end
 end
 
-TEMPLATES = templates(NUMBER_OF_DIGITS - 1).freeze
+TEMPLATES = templates(NUMBER_OF_OPERATORS).freeze
 
 def evaluate(template, operands, operators)
   stack = []
@@ -51,7 +52,7 @@ def evaluate(template, operands, operators)
 end
 
 def sequence_max(operands)
-  max = OPERANDS.last(NUMBER_OF_DIGITS).reduce { |acc, i| i * acc } + 1
+  max = OPERANDS.last(NUMBER_OF_OPERANDS).reduce { |acc, i| i * acc } + 1
   constructables = Array.new(max, false)
   operands.permutation.each do |perm|
     OPERATOR_PERMS.each do |operators|
@@ -63,6 +64,6 @@ def sequence_max(operands)
   constructables.drop(1).find_index(false)
 end
 
-answer = OPERANDS.combination(NUMBER_OF_DIGITS).max_by { |combination| sequence_max(combination) }.join.to_s
+answer = OPERANDS.combination(NUMBER_OF_OPERANDS).max_by { |combination| sequence_max(combination) }.join.to_s
 
 puts answer
