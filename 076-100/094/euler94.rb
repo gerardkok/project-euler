@@ -1,19 +1,11 @@
 MAX_PERIMETER = 1_000_000_000
 
-def perimeter(a, c)
-  2 * (a + c)
-end
+# see https://oeis.org/A120893 (sequence of the length of the legs)
+perimeters = [12, -12].cycle.reduce([16, 50]) do |acc, n|
+  next_perimeter = 4 * acc[-1] - acc[-2] + n
+  break acc unless next_perimeter <= MAX_PERIMETER
 
-perimeters = begin
-  a = 3
-  b = 4
-  c = 5
-  result = []
-  while (perimeter = perimeter(a, c)) <= MAX_PERIMETER
-    result << perimeter
-    a, b, c = -2 * a + b + 2 * c, -a + 2 * b + 2 * c, -2 * a + 2 * b + 3 * c
-  end
-  result
+  acc << next_perimeter
 end
 
 answer = perimeters.reduce(:+)
