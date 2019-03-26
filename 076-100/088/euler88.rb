@@ -1,7 +1,7 @@
 MAX_K = 12_000
 MAX_N = 2 * MAX_K
 
-factors = (2..MAX_N).each_with_object(Array.new(MAX_N + 1) { [] }) do |n, acc|
+factors = (2..Math.sqrt(MAX_N)).each_with_object(Array.new(MAX_N + 1) { [] }) do |n, acc|
   (n * n..MAX_N).step(n) do |f|
     acc[f] << n
   end
