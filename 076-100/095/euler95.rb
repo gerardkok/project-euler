@@ -10,7 +10,7 @@ def find_chain(n, divisor_sums)
   next_n = n
   chain = [next_n]
   while (next_n = divisor_sums[next_n]).between?(n, MAX_ELEMENT)
-    return (chain.first == next_n) ? chain : [] if chain.include?(next_n)
+    return (n == next_n) ? chain : [] if chain.include?(next_n)
 
     chain << next_n
   end
