@@ -6,26 +6,19 @@ divisor_sums = (1..MAX_ELEMENT / 2).each_with_object(Array.new(MAX_ELEMENT + 1, 
   end
 end
 
-def find_chain(n, divisor_sums)
+def amicable_chain_length(n, divisor_sums)
   next_n = n
-  chain = [next_n]
+  chain = [n]
   while (next_n = divisor_sums[next_n]).between?(n, MAX_ELEMENT)
-    return (n == next_n) ? chain : [] if chain.include?(next_n)
+    break if chain.include?(next_n)
 
     chain << next_n
   end
-  []
+  (n == next_n) ? chain.length : 0
 end
 
-chain_lengths = (2..MAX_ELEMENT).each_with_object(Array.new(MAX_ELEMENT + 1, 0)) do |n, acc|
-  next unless acc[n].zero?
+amicable_chain_lengths = Array.new(MAX_ELEMENT + 1) { |n| amicable_chain_length(n, divisor_sums) }
 
-  chain = find_chain(n, divisor_sums)
-  chain.each do |link|
-    acc[link] = chain.length
-  end
-end
-
-answer = chain_lengths.index(chain_lengths.max)
+answer = amicable_chain_lengths.index(amicable_chain_lengths.max)
 
 puts answer
