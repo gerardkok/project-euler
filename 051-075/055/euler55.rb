@@ -9,7 +9,7 @@ class Integer
 
   def lychrel?
     n = self
-    50.times do |i|
+    50.times do
       n += n.reverse
       return false if n.palindrome?
     end

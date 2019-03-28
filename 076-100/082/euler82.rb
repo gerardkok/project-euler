@@ -1,7 +1,7 @@
 require 'csv'
 
 def min_path_length(matrix)
-  size = matrix.length  # assuming square matrix
+  size = matrix.length # assuming square matrix
   min_paths_per_row = (size - 2).downto(0).each_with_object(matrix.map(&:last)) do |column, acc|
     acc[0] += matrix.first[column]
     (0...size).each_cons(2) do |upper, row|

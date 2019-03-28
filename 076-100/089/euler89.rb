@@ -1,6 +1,6 @@
 original = File.read('input89.txt')
 
-converted = original.gsub(/DCCCC|LXXXX|VIIII|CCCC|XXXX|IIII/, '__')
+converted = original.gsub(%r{DCCCC|LXXXX|VIIII|CCCC|XXXX|IIII}, '__')
 
 answer = original.length - converted.length
 

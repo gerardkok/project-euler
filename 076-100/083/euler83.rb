@@ -3,7 +3,7 @@ require 'csv'
 class PriorityQueue
   def initialize(size)
     @elements = [nil]
-    @distances = Array.new(size) { |_| Array.new(size, Float::INFINITY) }
+    @distances = Array.new(size) { Array.new(size, Float::INFINITY) }
   end
 
   def push(row, column, distance)
