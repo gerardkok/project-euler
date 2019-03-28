@@ -40,7 +40,7 @@ def corner_number(grid)
 end
 
 File.open('input96.txt') do |f|
-  corners = NUMBER_OF_PUZZLES.times.map do
+  corners = Array.new(NUMBER_OF_PUZZLES) do
     f.readline # skip header
     grid = Array.new(9) { f.readline }.map(&:chomp).join.split('').map(&:to_i)
     solvable?(grid) ? corner_number(grid) : 0
