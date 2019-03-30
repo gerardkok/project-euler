@@ -11,9 +11,8 @@ def column(grid, cell)
 end
 
 def box(grid, cell)
-  r = 27 * (cell / 27)
-  c = 3 * ((cell % 9) / 3)
-  [r + c, r + c + 9, r + c + 18].flat_map { |i| grid.slice(i, 3) }
+  rc = 27 * (cell / 27) + 3 * ((cell % 9) / 3)
+  [rc, rc + 9, rc + 18].flat_map { |i| grid.slice(i, 3) }
 end
 
 def unfit?(grid, cell, number)
