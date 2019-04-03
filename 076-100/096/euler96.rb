@@ -54,14 +54,10 @@ def markup(grid)
   end
 end
 
-def solved?(markup)
-  markup.all? { |m| m.length == 1 }
-end
-
 def solvable?(markup)
-  return true if solved?(markup)
-
   contents, cell = markup.each_with_index.select { |c, _| c.length > 1 }.min_by { |c, _| c.length }
+  return true unless cell
+
   contents.each do |number|
     markup_dup = Array.new(81) { |i| markup[i].dup }
     next unless assign(number, cell, markup_dup)
