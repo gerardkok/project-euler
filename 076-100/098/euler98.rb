@@ -27,13 +27,9 @@ def word_mappings(word, digitstrings)
   digitstrings.map { |s| mapping(word, s) }.compact
 end
 
-def words_mappings(words, digitstrings)
-  words.map { |word| word_mappings(word, digitstrings) }.reduce(:&)
-end
-
 def anagramic_squares(words, square_anagrams)
-  mappings = square_anagrams.flat_map { |sqs| words_mappings(words, sqs) }.select(&:any?)
-  mappings.flat_map { |m| words.map { |w| m.to_i(w) } }
+  mappings = square_anagrams.flat_map { |sqs| words.map { |word| word_mappings(word, sqs) }.reduce(:&) }
+  mappings.flat_map { |m| words.map { |word| m.to_i(word) } }
 end
 
 words = File.read('input98.txt').split(',').map { |n| n.delete('"') }
@@ -48,7 +44,7 @@ squares = (1..max_square).map { |n| n * n }.map(&:to_s)
 
 square_anagrams = squares.each_with_object({}) { |square, memo| (memo[square.chars.sort.join] ||= []) << square }.values.select { |s| s.length > 1 }
 
-anagramic_squares = anagrams.flat_map { |a| anagramic_squares(a, square_anagrams) }
+anagramic_squares = anagrams.flat_map { |anagram| anagramic_squares(anagram, square_anagrams) }
 
 answer = anagramic_squares.max
 
