@@ -22,11 +22,11 @@ end
 
 def mod_exp(n, e, mod)
   prod = 1
-  base = n % mod
+  n %= mod
   until e.zero?
-    prod = (prod * base) % mod if e.odd?
+    prod = (prod * n) % mod if e.odd?
     e >>= 1
-    base = (base * base) % mod
+    n = (n * n) % mod
   end
   prod
 end
