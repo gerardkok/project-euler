@@ -1,5 +1,5 @@
 def modinv(a, m)
-  # see https://rosettacode.org/wiki/Category:Ruby
+  # see https://rosettacode.org/wiki/Modular_inverse#Ruby
   # note that a and m are coprime in Farey sequences, so no need to verify
   return m if m == 1
 
