@@ -4,7 +4,7 @@ class Array
       (0..size - 1).to_a.combination(k).each do |s1|
         elements_left = (0..size - 1).to_a - s1
         elements_left.combination(k).each do |s2|
-          next if s1.first > s2.first
+          next if s1.first > s2.first # skip mirrors
 
           memo << [s1, s2] unless s1.zip(s2).all? { |x, y| x < y }
         end
@@ -29,10 +29,14 @@ class Array
   def special_sum?
     !smaller_subsets_with_bigger_sums? && !subsets_with_equal_sums?
   end
+
+  def sum
+    reduce(:+)
+  end
 end
 
-lines = File.open('input105.txt').readlines.map(&:chomp)
+special_sum_sets = File.open('input105.txt').map { |line| line.split(',').map(&:to_i).sort }.select(&:special_sum?)
 
-answer = lines.map { |line| line.split(',').map(&:to_i) }.map(&:sort).select(&:special_sum?).map { |set| set.reduce(:+) }.reduce(:+)
+answer = special_sum_sets.map(&:sum).reduce(:+)
 
 puts answer
