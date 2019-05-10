@@ -7,6 +7,8 @@ require 'set'
 #   end
 # end
 
+TARGET_SIZE = 6
+
 class SpecialSumSet
   attr_reader :elements, :present_subset_sums, :min_max_subset_sums
 
@@ -36,14 +38,11 @@ class SpecialSumSet
   def no_smaller_subsets_with_bigger_sums?(element)
     # condition (ii)
     # return false if adding 'element' would result in a subset with a higher sum than another, bigger subset
-    add_to_min_max_subset_sums(element).each_cons(2).none? { |p, c| p.last >= c.first }
+    add_to_min_max_subset_sums(element).each_cons(2).all? { |p, c| p.last < c.first }
   end
 
   def addable?(element)
-#    puts "#{self}, addable?(#{element})"
-    r = !@elements.include?(element) && no_subset_sums_with_difference?(element) && no_smaller_subsets_with_bigger_sums?(element)
-#    puts "#{r}"
-    r
+    no_subset_sums_with_difference?(element) && no_smaller_subsets_with_bigger_sums?(element)
   end
 
   def <<(element)
@@ -89,6 +88,8 @@ def finish_special_sum_set(special_sum_set, remaining_size, remaining_sum, next_
   nil
 end
 
+answer =(2**TARGET_SIZE..(TARGET_SIZE + 1) * 2**TARGET_SIZE - 1).find { |n| puts "n: #{n}"; finish_special_sum_set(SpecialSumSet.new, TARGET_SIZE, n, 1)}
+
 # s = SpecialSumSet.new([3, 5, 6], [true, false, false, true, false, true, true, false, true, true, false, true, false, false, true], [[0, 0], [3, 6], [8, 11], [14, 14]])
 
 # puts s.addable?(7).to_s
@@ -99,5 +100,5 @@ end
 
 # puts s.to_s
 
-puts finish_special_sum_set(SpecialSumSet.new, 6, 115, 1).to_s
+puts answer
 
