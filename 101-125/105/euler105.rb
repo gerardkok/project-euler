@@ -17,12 +17,12 @@ class Array
   end
 
   def smaller_subsets_with_bigger_sums?
-    (2..size / 2 + 1).any? { |l| self[0...l].reduce(:+) <= self[1 - l..-1].reduce(:+) }
+    (2..size / 2 + 1).any? { |l| self[0...l].sum <= self[1 - l..-1].sum }
   end
 
   def subsets_with_equal_sums?
     Array.masks[size].any? do |s1, s2|
-      values_at(*s1).reduce(:+) == values_at(*s2).reduce(:+)
+      values_at(*s1).sum == values_at(*s2).sum
     end
   end
 
@@ -37,6 +37,6 @@ end
 
 special_sum_sets = File.open('input105.txt').map { |line| line.split(',').map(&:to_i).sort }.select(&:special_sum?)
 
-answer = special_sum_sets.map(&:sum).reduce(:+)
+answer = special_sum_sets.map(&:sum).sum
 
 puts answer
