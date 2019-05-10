@@ -1,14 +1,6 @@
 class Array
-  def powerset
-    (0..size).flat_map { |s| combination(s).to_a }
-  end
-
-  def no_smaller_subsets_with_bigger_sums?
-    (2..size / 2 + 1).all? { |l| self[0...l].reduce(:+) > self[1 - l..-1].reduce(:+) }
-  end
-
-  def no_subsets_with_equal_sums?
-    total = (2..size / 2).each_with_object([]) do |k, memo|
+  @masks = Hash.new do |h, size|
+    h[size] = (2..size / 2).each_with_object([]) do |k, memo|
       (0..size - 1).to_a.combination(k).each do |s1|
         elements_left = (0..size - 1).to_a - s1
         elements_left.combination(k).each do |s2|
@@ -18,19 +10,29 @@ class Array
         end
       end
     end
-    puts "total: #{total}"
-    puts "#total: #{total.size}"
+  end
+
+  class << self
+    attr_reader :masks
+  end
+
+  def smaller_subsets_with_bigger_sums?
+    (2..size / 2 + 1).any? { |l| self[0...l].reduce(:+) <= self[1 - l..-1].reduce(:+) }
+  end
+
+  def subsets_with_equal_sums?
+    Array.masks[size].any? do |s1, s2|
+      values_at(*s1).reduce(:+) == values_at(*s2).reduce(:+)
+    end
+  end
+
+  def special_sum?
+    !smaller_subsets_with_bigger_sums? && !subsets_with_equal_sums?
   end
 end
 
-puts [2, 3, 4].no_smaller_subsets_with_bigger_sums?.to_s
+lines = File.open('input105.txt').readlines.map(&:chomp)
 
-puts [1, 2, 3, 4].no_smaller_subsets_with_bigger_sums?.to_s
+answer = lines.map { |line| line.split(',').map(&:to_i) }.map(&:sort).select(&:special_sum?).map { |set| set.reduce(:+) }.reduce(:+)
 
-puts [1].no_smaller_subsets_with_bigger_sums?.to_s
-
-(0..3).to_a.no_subsets_with_equal_sums?
-
-(0..6).to_a.no_subsets_with_equal_sums?
-
-(0..11).to_a.no_subsets_with_equal_sums?
+puts answer
