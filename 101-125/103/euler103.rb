@@ -1,104 +1,61 @@
 require 'set'
 
-# class Set
-#   def subsets
-#     a = to_a
-#     (0..size()).flat_map { |s| a.combination(s).map(&:to_set) }
-#   end
-# end
+TARGET_SIZE = 7
 
-TARGET_SIZE = 6
-
-class SpecialSumSet
-  attr_reader :elements, :present_subset_sums, :min_max_subset_sums
-
-  def initialize(elements = [], present_subset_sums = [true], min_max_subset_sums = [[0, 0]])
-    @elements = elements
-    @present_subset_sums = present_subset_sums
-    @min_max_subset_sums = min_max_subset_sums
+class Array
+  def smaller_subsets_with_bigger_sums?
+    l = size / 2 + 1
+    self[0...l].sum <= self[1 - l..-1].sum
   end
 
-  def initialize_dup(special_sum_set)
-    @elements = special_sum_set.elements.dup
-    @present_subset_sums = special_sum_set.present_subset_sums.dup
-    @min_max_subset_sums = special_sum_set.min_max_subset_sums.map(&:dup)
+  def subsets_with_equal_sums?
+    (2..size / 2).each do |k|
+      combination(k).reduce([].to_set) do |memo, s|
+        v = s.sum
+        return true if memo.include?(v)
+
+        memo << v
+      end
+    end
+    false
   end
 
-  def no_subset_sums_with_difference?(difference)
-    # condition (i)
-    # return false if there are already subset_sums whose difference is 'difference'
-    @present_subset_sums.each_cons(difference + 1).none? { |s| s.first && s.last }
-  end
-
-  def add_to_min_max_subset_sums(element)
-    l = @min_max_subset_sums.last
-    [[0, 0]] + @min_max_subset_sums.each_cons(2).map { |p, c| [[p.first + element, c.first].min, [p.last + element, c.last].max] } + [[l.first + element, l.last + element]]
-  end
-
-  def no_smaller_subsets_with_bigger_sums?(element)
-    # condition (ii)
-    # return false if adding 'element' would result in a subset with a higher sum than another, bigger subset
-    add_to_min_max_subset_sums(element).each_cons(2).all? { |p, c| p.last < c.first }
-  end
-
-  def addable?(element)
-    no_subset_sums_with_difference?(element) && no_smaller_subsets_with_bigger_sums?(element)
-  end
-
-  def <<(element)
-    # assumes addable?(element)
-    @elements << element
-    @present_subset_sums += Array.new(element - @present_subset_sums.size, false) if element > @present_subset_sums.size
-    @present_subset_sums = @present_subset_sums[0...element] + @present_subset_sums.each_cons(element + 1).map { |s| s.first || s.last } + @present_subset_sums[-element..-1]
-    @min_max_subset_sums = add_to_min_max_subset_sums(element)
-  end
-
-  def size
-    @elements.size
+  def special_sum?
+    !smaller_subsets_with_bigger_sums? && !subsets_with_equal_sums?
   end
 
   def sum
-    @present_subset_sums.size - 1
-  end
-
-  def to_s
-    "<#{@elements}, #{@present_subset_sums}, #{@min_max_subset_sums}>"
+    reduce(:+)
   end
 end
 
-def finish_special_sum_set(special_sum_set, remaining_size, remaining_sum, next_element)
-  return special_sum_set if remaining_size.zero?
+class SumSet
+  include Enumerable
 
-  # the remaining r spaces will at a minimum be occupied by next_element, next_element + 1,..., next_element + r - 1, 
-  # so if the sum of those remaining spaces will be higher than the remaining sum, constructing a special sum set
-  # is impossible
-  return nil if remaining_size * (remaining_size + 2 * next_element - 1) / 2 > remaining_sum
-  
-  # the maximum element cannot be bigger than the sum of the two smallest ones, or else it would violate condition (ii)
-  max_element = special_sum_set.size > 1 ? [remaining_sum, special_sum_set.elements[0] + special_sum_set.elements[1] - 1].min : remaining_sum
-  (next_element..max_element).each do |element|
-    next unless special_sum_set.addable?(element)
+  def initialize(size, sum, minimum = 1)
+    @size = size
+    @sum = sum
+    @minimum = minimum
+  end
 
-    special_sum_set_dup = special_sum_set.dup
-    special_sum_set_dup << element
-    if result = finish_special_sum_set(special_sum_set_dup, remaining_size - 1, remaining_sum - element, next_element + 1)
-      return result
+  def each
+    if @size == 1
+      yield [@sum]
+    else
+      (@minimum...(@sum + 1) / 2).each do |i|
+        SumSet.new(@size - 1, @sum - i, i + 1).each do |j|
+          yield [i] + j
+        end
+      end
     end
   end
-  nil
 end
 
-answer =(2**TARGET_SIZE..(TARGET_SIZE + 1) * 2**TARGET_SIZE - 1).find { |n| puts "n: #{n}"; finish_special_sum_set(SpecialSumSet.new, TARGET_SIZE, n, 1)}
+def find_sorted_sum_set(sum)
+  SumSet.new(TARGET_SIZE, sum).find(&:special_sum?)
+end
 
-# s = SpecialSumSet.new([3, 5, 6], [true, false, false, true, false, true, true, false, true, true, false, true, false, false, true], [[0, 0], [3, 6], [8, 11], [14, 14]])
-
-# puts s.addable?(7).to_s
-
-# puts s.to_s
-
-# s << 7
-
-# puts s.to_s
+start = [20, 31, 38, 39, 40, 42, 45].sum - 1
+answer = start.step.lazy.map { |n| find_sorted_sum_set(n) }.find(&:itself).join.to_s
 
 puts answer
-
