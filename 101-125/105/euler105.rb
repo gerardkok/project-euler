@@ -17,7 +17,7 @@ class Array
     false
   end
 
-  def special_sum?
+  def special?
     !smaller_subsets_with_bigger_sums? && !subsets_with_equal_sums?
   end
 
@@ -26,7 +26,7 @@ class Array
   end
 end
 
-special_sum_sets = File.open('input105.txt').map { |line| line.split(',').map(&:to_i).sort }.select(&:special_sum?)
+special_sum_sets = File.open('input105.txt').map { |line| line.split(',').map(&:to_i).sort }.select(&:special?)
 
 answer = special_sum_sets.map(&:sum).sum
 

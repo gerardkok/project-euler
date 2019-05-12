@@ -20,7 +20,7 @@ class Array
     false
   end
 
-  def special_sum?
+  def special?
     !smaller_subsets_with_bigger_sums? && !subsets_with_equal_sums?
   end
 
@@ -32,19 +32,20 @@ end
 class SumSet
   include Enumerable
 
-  def initialize(size, sum, minimum = 1)
+  def initialize(size, sum, minimum_element = 1)
     @size = size
     @sum = sum
-    @minimum = minimum
+    @minimum_element = minimum_element
   end
 
   def each
     if @size == 1
       yield [@sum]
     else
-      (@minimum...(@sum + 1) / 2).each do |i|
+      max = (@sum - (@size * (@size - 1) >> 1)) / @size
+      (@minimum_element..max).each do |i|
         SumSet.new(@size - 1, @sum - i, i + 1).each do |j|
-          yield [i] + j
+          yield j.unshift(i)
         end
       end
     end
@@ -52,7 +53,7 @@ class SumSet
 end
 
 def find_sorted_sum_set(sum)
-  SumSet.new(TARGET_SIZE, sum).find(&:special_sum?)
+  SumSet.new(TARGET_SIZE, sum).find(&:special?)
 end
 
 start = [20, 31, 38, 39, 40, 42, 45].sum - 1
