@@ -1,8 +1,7 @@
-def pandigital?(string)
-  string.chars.sort.join == '123456789'
-end
+LOG_SQRT_5 = Math.log10(Math.sqrt(5))
+LOG_PHI = Math.log10((1 + Math.sqrt(5)) / 2)
 
-class Fibonacci
+class FibonacciModulo
   include Enumerable
 
   def initialize
@@ -13,42 +12,23 @@ class Fibonacci
   def each
     loop do
       yield @current
-      @current, @next = @next, @current + @next
+      @current, @next = @next, (@current + @next) % 1_000_000_000
     end
   end
 end
 
-class String
-  def pandigital?
-    chars.sort.join == '123456789'
-  end
-end
-
 class Integer
-  def pandigital_ends?
-    as_string = to_s
-    return false if as_string.size < 9
-
-    as_string[-9..-1].pandigital? && as_string[0..8].pandigital?
-  end
-
-  def pandigital_tail?
-    as_string = to_s
-    return false if as_string.size < 9
-
-    as_string[-9..-1].pandigital?
-  end
-
-  def pandigital_head?
-    as_string = to_s
-    return false if as_string.size < 9
-
-    as_string[0..8].pandigital?
+  def pandigital?
+    to_s.chars.sort.join == '123456789'
   end
 end
 
-answer = Fibonacci.new.each_with_index do |f, i|
-  break i if f.pandigital_ends?
+answer = FibonacciModulo.new.each_with_index do |tail, i|
+  next unless tail.pandigital?
+
+  f_i = i * LOG_PHI - LOG_SQRT_5
+  head = (10**(f_i - f_i.to_i + 8)).to_i
+  break i if head.pandigital?
 end
 
 puts answer
