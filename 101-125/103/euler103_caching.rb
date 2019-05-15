@@ -38,14 +38,7 @@ special_sum_sets = Hash.new do |h, (size, sum)|
     else
       min = size - 1
       max = (sum - (size * (size - 1) >> 1)) / size
-      (min..max).each_with_object([]) do |i, memo|
-        h[[min, sum - i]].each do |s|
-          next unless i < s.first
-
-          t = [i] + s
-          memo << t if t.special?
-        end
-      end
+      (min..max).flat_map { |i| h[[min, sum - i]].select { |s| i < s.first }.map { |s| [i] + s }.select(&:special?) }
     end
 end
 
