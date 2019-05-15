@@ -58,22 +58,6 @@ class SumSet
   end
 end
 
-def special_sum_sets(size, sum, set_prefix = [])
-  if size == 1
-    s = set_prefix + [sum]
-    s.special? ? [s] : []
-  else
-    min = set_prefix.empty? ? size - 1 : set_prefix.last + 1
-    max = (sum - (size * (size - 1) >> 1)) / size
-    (min..max).each_with_object([]) do |i, memo|
-      s = set_prefix + [i]
-      next unless s.special?
-
-      memo.concat(special_sum_sets(size - 1, sum - i, s))
-    end
-  end
-end
-
 def find_sorted_sum_set(sum)
   SumSet.new(TARGET_SIZE, sum).find(&:any?)
 end
