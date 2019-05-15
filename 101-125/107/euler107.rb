@@ -9,7 +9,7 @@ class UnionFind
   end
 
   def union(id1, id2)
-    return if @subsets[id1] == @subsets[id2]
+    return if connected?(id1, id2)
 
     @subsets[id1].each do |element|
       @subsets[element] = @subsets[id2] << element
