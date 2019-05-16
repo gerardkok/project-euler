@@ -31,38 +31,20 @@ class Array
   end
 end
 
-class SumSet
-  include Enumerable
-
-  def initialize(size, sum, set_prefix = [])
-    @size = size
-    @sum = sum
-    @set_prefix = set_prefix
-  end
-
-  def each
-    if @size == 1
-      yield @set_prefix if @set_prefix.push(@sum).special?
+special_sum_sets = Hash.new do |h, (size, sum)|
+  h[[size, sum]] =
+    if size == 1
+      [[sum]]
     else
-      min = @set_prefix.empty? ? @size - 1 : @set_prefix.last + 1
-      max = (@sum - (@size * (@size - 1) >> 1)) / @size
-      (min..max).each do |i|
-        s = @set_prefix + [i]
-        next unless s.special?
-
-        self.class.new(@size - 1, @sum - i, s).each do |j|
-          yield j
-        end
-      end
+      min = size - 1
+      max = (sum - (size * (size - 1) >> 1)) / size
+      (min..max).flat_map { |i| h[[min, sum - i]].select { |s| i < s.first }.map { |s| [i] + s }.select(&:special?) }
     end
-  end
 end
 
-def find_sorted_sum_set(sum)
-  SumSet.new(TARGET_SIZE, sum).find(&:any?)
-end
-
-start = [20, 31, 38, 39, 40, 42, 45].sum - 1
-answer = start.step.lazy.map { |n| find_sorted_sum_set(n) }.find(&:itself).join.to_s
+# 2^n for target size n is a lower bound,
+# see https://github.com/nayuki/Project-Euler-solutions/blob/master/python/p103.py
+start = 1 << TARGET_SIZE
+answer = start.step.lazy.map { |n| special_sum_sets[[TARGET_SIZE, n]] }.find(&:any?).join.to_s
 
 puts answer
