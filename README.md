@@ -1,6 +1,9 @@
 # project-euler
 [Project Euler](https://projecteuler.net) solutions in Ruby (and a few in Crystal).
 
+| SPOILER ALERT: Although this repository does not contain direct answers to Project Euler problems, it is trivially easy to retrieve them from here by just executing the scripts. If you don't wish to be spoiled, navigate elsewhere. |
+| --- |
+
 My goal is to improve my Ruby skills, and to play a bit with Crystal.
 
 Self-imposed restrictions:
