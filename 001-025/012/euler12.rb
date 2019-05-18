@@ -5,7 +5,7 @@ def triangle_number(index)
 end
 
 def number_of_divisors(number)
-  Prime.prime_division(number).map(&:last).map { |i| i + 1 }.reduce(1, :*)
+  Prime.prime_division(number).map(&:last).map(&:next).reduce(1, :*)
 end
 
 def triangle_number_of_divisors(index)
