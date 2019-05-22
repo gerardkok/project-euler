@@ -2,7 +2,7 @@ def pandigital?(string)
   string.chars.sort.join == '123456789'
 end
 
-# suppose the pandigial product 'p' is constructed by concatening factors 'f1'...'fn' with n > 1
+# suppose the pandigial product 'p' is constructed by concatenating factors 'f1'...'fn' with n > 1
 # we can limit the search space as follows:
 # - p starts with a 9, because the example in the problem description starts with a 9, and p is greater than the example
 # - f1 has at most 4 digits; if it has 5, then f2 would have at least 5 too, and p would have at least 10

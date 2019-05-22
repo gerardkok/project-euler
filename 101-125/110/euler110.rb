@@ -7,8 +7,9 @@ end
 def exponents(n, max = n)
   return [[]] if n.zero?
 
-  (1..[n, max].min).flat_map do |n1|
-    exponents(n - n1, [n1, max].min).map { |n2| n2.unshift(n1) }
+  m = [n, max].min
+  m.downto(1).flat_map do |i|
+    exponents(n - i, i).map { |j| j.unshift(i) }
   end
 end
 
