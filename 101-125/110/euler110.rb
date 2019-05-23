@@ -14,7 +14,7 @@ def exponents(n, max = n)
 end
 
 def primorial_products_with_n_factors(n)
-  exponents(n).map { |exps| Prime.first(exps.size).zip(exps).map { |p, e| p**e}.reduce(:*) }
+  exponents(n).map { |exps| Prime.first(exps.size).zip(exps).map { |p, e| p**e }.reduce(:*) }
 end
 
 answer = (1..18).flat_map { |n| primorial_products_with_n_factors(n) }.sort.find { |n| (number_of_divisors_of_squared(n) + 1) / 2 > 4_000_000 }
