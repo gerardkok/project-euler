@@ -1,9 +1,11 @@
-SINGLE_DART_SCORES = ((1..20).flat_map { |i| [i, 2 * i, 3 * i] } + [25, 50]).freeze
+SINGLE_DART_SCORES = ((1..20).flat_map { |i| [i, 2 * i, 3 * i] } + [0, 25, 50]).freeze
 DOUBLE_SCORES = ((1..20).map { |r| r * 2 } + [25 * 2]).freeze
 
-preceeding_double = (0..2).flat_map { |n| SINGLE_DART_SCORES.combination(n).to_a } + SINGLE_DART_SCORES.map { |s| [s, s] }
-
-checkouts = preceeding_double.product(DOUBLE_SCORES).map(&:flatten)
+checkouts = SINGLE_DART_SCORES.each_with_index.flat_map do |first_dart, i|
+  SINGLE_DART_SCORES[i..-1].flat_map do |second_dart|
+    DOUBLE_SCORES.map { |final_dart| [first_dart, second_dart, final_dart] }
+  end
+end
 
 answer = checkouts.count { |checkout| checkout.reduce(:+) < 100 }
 
