@@ -1,19 +1,33 @@
 class UnionFind
-  # from https://github.com/gastropoda/algorithms2/blob/master/kruskals_union_set.rb
   def initialize
-    @subsets = Hash.new { |subsets, element| subsets[element] = [element] }
+    @ids = Hash.new { |ids, id| ids[id] = id }
+    @sizes = Hash.new(1)
   end
 
-  def connected?(id1, id2)
-    @subsets[id1] == @subsets[id2]
+  def find(index)
+    return index if @ids[index] == index
+
+    @ids[index] = @ids[@ids[index]]
+    find(@ids[index])
   end
 
-  def union(id1, id2)
-    return if connected?(id1, id2)
+  def connected?(p, q)
+    find(p) == find(q)
+  end
 
-    @subsets[id1].each do |element|
-      @subsets[element] = @subsets[id2] << element
-    end
+  def union(p, q)
+    return if connected?(p, q)
+
+    root_p = find(p)
+    root_q = find(q)
+    @ids[root_p] > @ids[root_q] ? join(root_q, root_p) : join(root_p, root_q)
+  end
+
+  private
+
+  def join(root1, root2)
+    @ids[root1] = root2
+    @sizes[root2] += @sizes[root1]
   end
 end
 
