@@ -12,7 +12,7 @@ number_of_block_combinations = Hash.new do |h, row_length|
     if row_length < MIN_BLOCK_SIZE
       0
     else
-      (MIN_BLOCK_SIZE..MAX_BLOCK_SIZE).map { |b| (0..row_length - b).map { |r| h[row_length - r - b] }.sum }.sum
+      (MIN_BLOCK_SIZE..MAX_BLOCK_SIZE).flat_map { |b| (0..row_length - b).map { |r| h[row_length - r - b] } }.sum
     end
   h[row_length] = 1 + remaining_combinations
 end
