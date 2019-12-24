@@ -18,7 +18,7 @@ class Partition
 
         tail = @array_to_partition[i + 1..-1]
         Partition.new(tail).each do |t|
-          yield [head] + t if t.empty? || head < t.first
+          yield t.unshift(head) if t.empty? || head < t.first
         end
       end
     end
