@@ -3,8 +3,9 @@ require 'prime'
 class Partition
   include Enumerable
 
-  def initialize(array_to_partition)
+  def initialize(array_to_partition, previous_head = 0)
     @array_to_partition = array_to_partition
+    @previous_head = previous_head
   end
 
   def each
@@ -14,11 +15,11 @@ class Partition
       head = 0
       (0...@array_to_partition.length).each do |i|
         head = head * 10 + @array_to_partition[i]
-        next unless head.prime?
+        next unless head > @previous_head && head.prime?
 
         tail = @array_to_partition[i + 1..-1]
-        Partition.new(tail).each do |t|
-          yield t.unshift(head) if t.empty? || head < t.first
+        Partition.new(tail, head).each do |t|
+          yield t.unshift(head)
         end
       end
     end
