@@ -1,11 +1,5 @@
 require 'prime'
 
-class Array
-  def to_number
-    reduce { |number, digit| number * 10 + digit }
-  end
-end
-
 class Partition
   include Enumerable
 
@@ -17,8 +11,9 @@ class Partition
     if @array_to_partition.empty?
       yield []
     else
+      head = 0
       (0...@array_to_partition.length).each do |i|
-        head = @array_to_partition[0..i].to_number
+        head = head * 10 + @array_to_partition[i]
         next unless head.prime?
 
         tail = @array_to_partition[i + 1..-1]
