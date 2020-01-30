@@ -1,9 +1,9 @@
 require 'date'
 
-def sundays_in_year(year)
-  (1..12).select { |month| Date.new(year, month, 1).sunday? }.length
+def count_sundays_in_year(year)
+  (1..12).count { |month| Date.new(year, month, 1).sunday? }
 end
 
-answer = (1901..2000).map { |year| sundays_in_year(year) }.reduce(:+)
+answer = (1901..2000).map { |year| count_sundays_in_year(year) }.sum
 
 puts answer
