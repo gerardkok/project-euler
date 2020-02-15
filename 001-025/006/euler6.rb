@@ -1,7 +1,7 @@
 N = 100
 
-sumsquares = (1..N).map { |i| i**2 }.reduce(:+)
-squaredsum = (1..N).reduce(:+)**2
+sumsquares = (1..N).map { |i| i**2 }.sum
+squaredsum = (1..N).sum**2
 
 answer = squaredsum - sumsquares
 
