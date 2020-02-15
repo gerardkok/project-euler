@@ -14,8 +14,6 @@ class Fibonacci
   end
 end
 
-answer = Fibonacci.new.each_with_index do |f, i|
-  break i if f > 10**999
-end
+answer = Fibonacci.new.each_with_index.find { |f, _| f > 10**999 }.last
 
 puts answer
