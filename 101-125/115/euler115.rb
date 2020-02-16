@@ -1,11 +1,5 @@
 MIN_BLOCK_SIZE = 50
 
-class Array
-  def sum
-    reduce(0, :+)
-  end
-end
-
 number_of_block_combinations = Hash.new do |h, row_length|
   remaining_combinations =
     if row_length < MIN_BLOCK_SIZE

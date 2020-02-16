@@ -1,8 +1,4 @@
 class Integer
-  def digits
-    to_s.chars.map(&:to_i)
-  end
-
   def increasing?
     digits.each_cons(2).all? { |x, y| x <= y }
   end

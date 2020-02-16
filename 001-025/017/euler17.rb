@@ -47,6 +47,6 @@ class Integer
   end
 end
 
-answer = (1..1_000).map(&:lettercount).reduce(:+)
+answer = (1..1_000).map(&:lettercount).sum
 
 puts answer

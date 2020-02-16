@@ -1,3 +1,3 @@
-answer = (1..100).reduce(:*).to_s.chars.map(&:to_i).reduce(:+)
+answer = (1..100).reduce(:*).to_s.chars.map(&:to_i).sum
 
 puts answer

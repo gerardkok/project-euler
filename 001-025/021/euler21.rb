@@ -13,6 +13,6 @@ class Integer
   end
 end
 
-answer = (2..10_000).select(&:amicable?).reduce(:+)
+answer = (2..10_000).select(&:amicable?).sum
 
 puts answer

@@ -23,4 +23,4 @@ end
 
 non_abundant_sums = (1..UPPER_LIMIT).to_a - abundant_sums
 
-puts non_abundant_sums.reduce(:+)
+puts non_abundant_sums.sum

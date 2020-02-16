@@ -1,9 +1,3 @@
-class Array
-  def sum
-    reduce(0, :+)
-  end
-end
-
 def number_of_combinations(cached_combinations, row_length, block_size)
   return 0 if row_length < block_size
 
